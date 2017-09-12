@@ -304,12 +304,17 @@ class WidgetPlugin extends Plugin
         $has_widget = array_key_exists(self::KEY,$headers);
         $content = '';
         $has_widget = $merge_global ? ($global_widgets || $has_widget): $has_widget;
-
-        if($has_widget & $rc_level++ <= self::MAX_RECURSE){
-            $wigs = (array) $headers->{self::KEY};
-            if($merge_global && $global_widgets)
+        $page_has_widget = array_key_exists(self::KEY,$headers);
+        if($has_widget && $rc_level++ <= self::MAX_RECURSE){
+            if( $page_has_widget ){
+              $wigs = (array) $headers->{self::KEY};
+            }else{
+              $wigs = array();
+            }
+            if($merge_global && $global_widgets){
                 $wigs = $global_widgets ? array_merge_recursive($global_widgets,$wigs) : $wigs;
 
+            }
             if($wigs){
                 $locs =[];
 
